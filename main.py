@@ -44,4 +44,6 @@ for element in root_child_elements:
                 graph.add_edge(pydot.Edge(root_child_element_node, parent_node))
                 parent_nodes.append(parent_node)
 
-graph.write_png('family_tree.png')
+# Write the graph
+graph.write_png('build/family_tree.png')
+graph.write_pdf('build/family_tree.pdf')
