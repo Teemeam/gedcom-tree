@@ -13,7 +13,7 @@ Visualize ancestry data in Python.
 
 Export a [GEDCOM file](https://en.wikipedia.org/wiki/GEDCOM) from a genealogy software like Gramps. Store the file in the root folder.
 
-Run `py main.py` to parse the GEDCOM file and to create a PNG graph.
+Run `py main.py` to parse the GEDCOM file and to create a graph.
 
 ## **Notes**
 
