@@ -1,0 +1,7 @@
+# Ignore .ged files except the ones in tests folder
+*.ged
+!tests/*.ged
+
+# Ignore generated trees
+*.png
+*.pdf
