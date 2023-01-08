@@ -22,10 +22,16 @@ root_child_element_nodes = []
 
 # Iterate through all root child elements
 for element in root_child_elements:
+
     # Check if `element` is an actual `IndividualElement`
     if isinstance(element, IndividualElement):
-        (first, last) = element.get_name()
-        root_child_element_node = pydot.Node(first, label=first + " " + last)
+
+        # Get person data
+        (given_name, surname) = element.get_name()
+        (date, place, sources) = element.get_birth_data()
+
+        # Create node and add it to the graph
+        root_child_element_node = pydot.Node(given_name, label=given_name + " " + surname + "\n" + date)
         graph.add_node(root_child_element_node)
         root_child_element_nodes.append(root_child_element_node)
 
@@ -37,10 +43,15 @@ for element in root_child_elements:
 
         # Add an edge between the current individual and each of their parents
         for parent in parents:
+
             # Check if `parent` is an actual `IndividualElement`
             if isinstance(parent, IndividualElement):
-                (first_parent, last_parent) = parent.get_name()
-                parent_node = pydot.Node(first_parent, label=first_parent + " " + last_parent)
+
+                # Get parent data
+                (parent_given_name, parent_surname) = parent.get_name()
+
+                # Create edges and add them to the graph
+                parent_node = pydot.Node(parent_given_name, label=" ")
                 graph.add_edge(pydot.Edge(root_child_element_node, parent_node))
                 parent_nodes.append(parent_node)
 
