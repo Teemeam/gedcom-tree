@@ -15,7 +15,7 @@ gedcom_parser.parse_file(file_path)
 root_child_elements = gedcom_parser.get_root_child_elements()
 
 # Create the graph
-graph = pydot.Dot(graph_type='graph', rankdir='BT', ranksep='2.0')
+graph = pydot.Dot(graph_type='graph', rankdir='TB', ranksep='1.0')
 
 # Create an empty list to store the root child element nodes
 root_child_element_nodes = []
@@ -42,9 +42,9 @@ for element in root_child_elements:
         # Set fill color
         fillcolor = ''
         if gender == 'M':
-            fillcolor = '#AFEEEE' # Pale turquoise
+            fillcolor = '#D9D77F'
         else:
-            fillcolor = '#FFE5B4' # Peach
+            fillcolor = '#E4BEA4'
 
         # Create node and add it to the graph
         root_child_element_node = pydot.Node(
@@ -53,6 +53,7 @@ for element in root_child_elements:
             shape='box',
             style='filled',
             fontname='Arial',
+            color=fillcolor,
             fillcolor=fillcolor
         )
         graph.add_node(root_child_element_node)
@@ -75,8 +76,16 @@ for element in root_child_elements:
 
                 # Create edges and add them to the graph
                 parent_node = pydot.Node(parent_given_name, label=" ")
-                graph.add_edge(pydot.Edge(root_child_element_node, parent_node, dir='back'))
                 parent_nodes.append(parent_node)
+
+                families = gedcom_parser.get_families(parent)
+
+                for family in families:
+                    family_node = pydot.Node(str(family), label=str(family))
+                    graph.add_node(family_node)
+                    graph.add_edge(pydot.Edge(parent_node, family_node, dir='forward'))
+
+                    graph.add_edge(pydot.Edge(family_node, root_child_element_node, dir='forward'))
 
 # Write the graph
 graph.write_png('build/family_tree.png')
