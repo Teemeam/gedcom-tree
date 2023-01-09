@@ -28,10 +28,33 @@ for element in root_child_elements:
 
         # Get person data
         (given_name, surname) = element.get_name()
-        (date, place, sources) = element.get_birth_data()
+        birth_year = element.get_birth_year()
+        death_year = element.get_death_year()
+        gender = element.get_gender()
+
+        # Create label
+        label = ''
+        if death_year == -1:
+            label = given_name + ' ' + surname + '\ns. ' + str(birth_year)
+        else:
+            label = given_name + ' ' + surname + '\ns. ' + str(birth_year) + '\nk. ' + str(death_year)
+
+        # Set fill color
+        fillcolor = ''
+        if gender == 'M':
+            fillcolor = '#AFEEEE' # Pale turquoise
+        else:
+            fillcolor = '#FFE5B4' # Peach
 
         # Create node and add it to the graph
-        root_child_element_node = pydot.Node(given_name, label=given_name + " " + surname + "\n" + date)
+        root_child_element_node = pydot.Node(
+            given_name,
+            label=label,
+            shape='box',
+            style='filled',
+            fontname='Arial',
+            fillcolor=fillcolor
+        )
         graph.add_node(root_child_element_node)
         root_child_element_nodes.append(root_child_element_node)
 
@@ -52,7 +75,7 @@ for element in root_child_elements:
 
                 # Create edges and add them to the graph
                 parent_node = pydot.Node(parent_given_name, label=" ")
-                graph.add_edge(pydot.Edge(root_child_element_node, parent_node))
+                graph.add_edge(pydot.Edge(root_child_element_node, parent_node, dir='back'))
                 parent_nodes.append(parent_node)
 
 # Write the graph
