@@ -15,8 +15,12 @@ Export a [GEDCOM file](https://en.wikipedia.org/wiki/GEDCOM) from a genealogy so
 
 Run `py main.py` to parse the GEDCOM file and to create a graph.
 
+## **Test**
+
+Test with `tests/test.ged`.
+
 ## **Notes**
 
 Python-gedcom parser supports the GEDCOM 5.5 format.
 
-Test with `tests/test.ged`.
+[ChatGPT](https://openai.com/blog/chatgpt/) is a large language model developed by OpenAI that is able to understand natural language and generate text in response. It was used to provide explanations and context for the code in question.
