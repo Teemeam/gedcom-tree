@@ -19,7 +19,11 @@ Run `py main.py` to parse the GEDCOM file and to create a graph.
 
 Test with `tests/test.ged`.
 
-![](/tests/test.png)
+<img
+  alt="Tree of a test family"
+  src="tests/test.png"
+  width="350px"
+/>
 
 ## **Notes**
 
