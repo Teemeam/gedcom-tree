@@ -39,11 +39,11 @@ for element in root_child_elements:
         gender = element.get_gender()
 
         # Create label
-        label = ''
-        if death_year == -1:
-            label = given_name + ' ' + surname + '\ns. ' + str(birth_year)
-        else:
-            label = given_name + ' ' + surname + '\ns. ' + str(birth_year) + '\nk. ' + str(death_year)
+        label = f'{ given_name } { surname }'
+        if birth_year != -1:
+            label += f'\ns. { birth_year }'
+        if death_year != -1:
+            label += f', k. { death_year }'
 
         # Set fill color
         fillcolor = ''
@@ -85,7 +85,7 @@ for element in root_child_elements:
                 (parent_given_name, parent_surname) = parent.get_name()
 
                 # Create a new node for the current parent
-                parent_node = pydot.Node(parent_given_name, label=" ")
+                parent_node = pydot.Node(parent_given_name, label='')
 
                 # Add the current parent node to the list of parent nodes. Not used currently.
                 parent_nodes.append(parent_node)
@@ -96,8 +96,17 @@ for element in root_child_elements:
                 # Iterate through each of the families found in the previous step
                 for family in families:
 
-                    # Create a new node for the current family, with the label set to the name of the family
-                    family_node = pydot.Node(str(family), label=str(family))
+                    # Create a new node for the current family and make it a small black circle
+                    family_node = pydot.Node(
+                        str(family),
+                        label='',
+                        shape='circle',
+                        fixedsize='true',
+                        width=0.1,
+                        height=0.1,
+                        style='filled',
+                        fillcolor='black'
+                    )
 
                     # Add the family node to the graph
                     graph.add_node(family_node)

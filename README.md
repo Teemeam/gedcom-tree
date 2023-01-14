@@ -19,6 +19,8 @@ Run `py main.py` to parse the GEDCOM file and to create a graph.
 
 Test with `tests/test.ged`.
 
+![](/tests/test.png)
+
 ## **Notes**
 
 Python-gedcom parser supports the GEDCOM 5.5 format.

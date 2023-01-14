@@ -2,8 +2,9 @@
 *.ged
 !tests/*.ged
 
-# Ignore generated trees
+# Ignore generated trees except the .png files in tests folder
 *.png
+!tests/*.png
 *.pdf
 
 # Logs
