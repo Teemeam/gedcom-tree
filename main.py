@@ -1,5 +1,6 @@
 from gedcom.element.individual import IndividualElement
 from gedcom.parser import Parser
+from tqdm import tqdm
 import pydot
 
 # Path
@@ -18,7 +19,10 @@ root_child_elements = gedcom_parser.get_root_child_elements()
 graph = pydot.Dot(graph_type='graph', rankdir='TB', ranksep='1.0')
 
 # Create an empty list to store the root child element nodes
-root_child_element_nodes = []
+root_child_element_nodes = set()
+
+# Create an empty list to store the family nodes
+family_nodes = set()
 
 # Create an empty set to store the parent edges
 parent_edges = set()
@@ -27,7 +31,7 @@ parent_edges = set()
 child_edges = set()
 
 # Iterate through all root child elements
-for element in root_child_elements:
+for element in tqdm(root_child_elements, desc='Iterating: '):
 
     # Check if `element` is an actual `IndividualElement`
     if isinstance(element, IndividualElement):
@@ -67,7 +71,7 @@ for element in root_child_elements:
         graph.add_node(root_child_element_node)
 
         # Add the current root child element node to the list of root child element nodes. Not used currently.
-        root_child_element_nodes.append(root_child_element_node)
+        root_child_element_nodes.add(root_child_element_node)
 
         # Get the parents of the current individual
         parents = gedcom_parser.get_parents(element)
@@ -108,8 +112,14 @@ for element in root_child_elements:
                         fillcolor='black'
                     )
 
-                    # Add the family node to the graph
-                    graph.add_node(family_node)
+                    # Check if the current family node has already been added to the graph
+                    if family_node not in family_nodes:
+
+                        # Add the family node to the graph
+                        graph.add_node(family_node)
+
+                        # Add the family node to the set of family nodes
+                        family_nodes.add(family_node)
 
                     # Create an edge between the current parent node and the current family node
                     parent_edge = pydot.Edge(parent_node, family_node)
@@ -137,7 +147,90 @@ for element in root_child_elements:
 
                             # Add the child edge to the graph
                             graph.add_edge(child_edge)
+
+                            # Add the child edge to the set of child edges
                             child_edges.add(child_edge)
+
+                # In addition to families of individuals and their parents, get the families of individuals and their children
+                families = gedcom_parser.get_families(element)
+
+                # Iterate through each of the families found in the previous step
+                for family in families:
+
+                    # Create a new node for the current family and make it a small black circle
+                    family_node = pydot.Node(
+                        str(family),
+                        label='',
+                        shape='circle',
+                        fixedsize='true',
+                        width=0.1,
+                        height=0.1,
+                        style='filled',
+                        fillcolor='black'
+                    )
+
+                    # Check if the current family node has already been added to the graph
+                    if family_node not in family_nodes:
+
+                        # Add the family node to the graph
+                        graph.add_node(family_node)
+
+                        # Add the family node to the set of family nodes
+                        family_nodes.add(family_node)
+
+                    # Create an edge between the current parent node and the current family node
+                    parent_edge = pydot.Edge(root_child_element_node, family_node)
+
+                    # Check if the current parent edge has already been added to the graph
+                    if parent_edge not in parent_edges:
+
+                        # Add the parent edge to the graph
+                        graph.add_edge(parent_edge)
+
+                        # Add the parent edge to the set of parent edges
+                        parent_edges.add(parent_edge)
+
+        # If the current individual has no parents or they are unknown
+        if not parents:
+
+            # Get a list of families that the current individual is a part of
+            families = gedcom_parser.get_families(element)
+
+            # Iterate through each of the families found in the previous step
+            for family in families:
+
+                # Create a new node for the current family and make it a small black circle
+                family_node = pydot.Node(
+                    str(family),
+                    label='',
+                    shape='circle',
+                    fixedsize='true',
+                    width=0.1,
+                    height=0.1,
+                    style='filled',
+                    fillcolor='black'
+                )
+
+                # Check if the current family node has already been added to the graph
+                if family_node not in family_nodes:
+                
+                    # Add the family node to the graph
+                    graph.add_node(family_node)
+
+                    # Add the family node to the set of family nodes
+                    family_nodes.add(family_node)
+
+                # Create an edge between the current parent node and the current family node
+                parent_edge = pydot.Edge(root_child_element_node, family_node)
+
+                # Check if the current parent edge has already been added to the graph
+                if parent_edge not in parent_edges:
+
+                    # Add the parent edge to the graph
+                    graph.add_edge(parent_edge)
+
+                    # Add the parent edge to the set of parent edges
+                    parent_edges.add(parent_edge)
 
 # Write the graph
 graph.write_png('build/family_tree.png')

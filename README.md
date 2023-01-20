@@ -8,6 +8,7 @@ Visualize ancestry data in Python.
 - [python-gedcom](https://pypi.org/project/python-gedcom/)
 - [pydot](https://pypi.org/project/pydot/)
     - pydot uses [GraphViz](https://graphviz.org/) to render graphs as PDF, PNG, SVG, etc. Install it separately.
+- [tqdm](https://github.com/tqdm/tqdm) for progress meter.
 
 ## **Usage**
 
