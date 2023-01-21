@@ -4,8 +4,8 @@ import pydot
 from tqdm import tqdm
 
 # Import modules
-from create_node import create_root_child_element_node, create_family_node
-from add import add_node, add_edge
+from modules.create_node import create_root_child_element_node, create_family_node
+from modules.add import add_node, add_edge
 
 # Path
 file_path = 'family_tree.ged'
