@@ -49,9 +49,9 @@ for element in tqdm(root_child_elements, desc='Iterating: '):
         # Create label
         label = f'{ given_name } { surname }'
         if birth_year != -1:
-            label += f'\ns. { birth_year }'
+            label += f'\n* { birth_year }'
         if death_year != -1:
-            label += f', k. { death_year }'
+            label += f'\n+ { death_year }'
 
         # Set fill color
         fillcolor = ''
