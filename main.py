@@ -45,6 +45,7 @@ for element in tqdm(root_child_elements, desc='Iterating: '):
         birth_year = element.get_birth_year()
         death_year = element.get_death_year()
         gender = element.get_gender()
+        pointer = element.get_pointer()
 
         # Create label
         label = f'{ given_name } { surname }'
@@ -61,7 +62,7 @@ for element in tqdm(root_child_elements, desc='Iterating: '):
             fillcolor = '#E4BEA4' # Women
 
         # Create a new node for the current individual
-        root_child_element_node = create_root_child_element_node(given_name, label, fillcolor)
+        root_child_element_node = create_root_child_element_node(given_name, label, pointer, fillcolor)
 
         # Add the newly crated root child element node to the graph and the list of root child element nodes
         add_node(graph, root_child_element_node, root_child_element_nodes)
