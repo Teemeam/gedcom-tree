@@ -1,13 +1,13 @@
 import pydot
 
 # Import list of lineal descendants
-import lineal_descendants
+from modules.lineal_descendants import lineal_descendants
 
 # Create root child element node
 def create_root_child_element_node(given_name, label, pointer, fillcolor):
 
     # Create border for lineal descendants
-    if pointer in lineal_descendants.lineal_descendants:
+    if pointer in lineal_descendants:
         return pydot.Node(
             given_name,
             label=label,
