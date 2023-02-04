@@ -6,7 +6,7 @@ from modules.lineal_descendants import lineal_descendants
 # Create root child element node
 def create_root_child_element_node(given_name, label, pointer, fillcolor):
 
-    # Create border for lineal descendants
+    # Lineal descendants have darker background
     if pointer in lineal_descendants:
         return pydot.Node(
             given_name,
@@ -14,8 +14,7 @@ def create_root_child_element_node(given_name, label, pointer, fillcolor):
             shape='box',
             style='filled',
             fontname='Arial',
-            color='#000000',
-            penwidth=3,
+            color=fillcolor,
             fillcolor=fillcolor
         )
     else:
@@ -25,8 +24,8 @@ def create_root_child_element_node(given_name, label, pointer, fillcolor):
             shape='box',
             style='filled',
             fontname='Arial',
-            color=fillcolor,
-            fillcolor=fillcolor
+            color=f'{ fillcolor }4D', # 30 %
+            fillcolor=f'{ fillcolor }4D' # 30 %
         )
 
 # Create family node
