@@ -58,14 +58,19 @@ for element in tqdm(root_child_elements, desc='Iterating: '):
         fillcolor = ''
         if gender == 'M':
             fillcolor = '#D9D77F' # Men
-        else:
+        elif gender == 'F':
             fillcolor = '#E4BEA4' # Women
+        else:
+            fillcolor = '#EEEEEE' # Unknown
 
         # Create a new node for the current individual
         root_child_element_node = create_root_child_element_node(given_name, label, pointer, fillcolor)
 
-        # Add the newly crated root child element node to the graph and the list of root child element nodes
-        add_node(graph, root_child_element_node, root_child_element_nodes)
+        # Check if the current root child element node has already been added to the graph
+        if root_child_element_node not in root_child_element_nodes:
+
+            # Add the newly created root child element node to the graph and the list of root child element nodes
+            add_node(graph, root_child_element_node, root_child_element_nodes)
 
         # Get the parents of the current individual
         parents = gedcom_parser.get_parents(element)
@@ -81,9 +86,10 @@ for element in tqdm(root_child_elements, desc='Iterating: '):
 
                 # Get parent data
                 (parent_given_name, parent_surname) = parent.get_name()
+                pointer = parent.get_pointer()
 
                 # Create a new node for the current parent
-                parent_node = pydot.Node(parent_given_name, label='')
+                parent_node = pydot.Node(pointer, label='')
 
                 # Add the current parent node to the list of parent nodes. Not used currently.
                 parent_nodes.append(parent_node)

@@ -9,7 +9,7 @@ def create_root_child_element_node(given_name, label, pointer, fillcolor):
     # Lineal descendants have darker background
     if pointer in lineal_descendants:
         return pydot.Node(
-            given_name,
+            pointer,
             label=label,
             shape='box',
             style='filled',
@@ -19,7 +19,7 @@ def create_root_child_element_node(given_name, label, pointer, fillcolor):
         )
     else:
         return pydot.Node(
-            given_name,
+            pointer,
             label=label,
             shape='box',
             style='filled',
