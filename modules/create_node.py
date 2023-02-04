@@ -4,7 +4,7 @@ import pydot
 from modules.lineal_descendants import lineal_descendants
 
 # Create root child element node
-def create_root_child_element_node(given_name, label, pointer, fillcolor):
+def create_root_child_element_node(pointer, label, fillcolor):
 
     # Lineal descendants have darker background
     if pointer in lineal_descendants:

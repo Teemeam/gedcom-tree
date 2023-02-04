@@ -64,7 +64,7 @@ for element in tqdm(root_child_elements, desc='Iterating: '):
             fillcolor = '#EEEEEE' # Unknown
 
         # Create a new node for the current individual
-        root_child_element_node = create_root_child_element_node(given_name, label, pointer, fillcolor)
+        root_child_element_node = create_root_child_element_node(pointer, label, fillcolor)
 
         # Check if the current root child element node has already been added to the graph
         if root_child_element_node not in root_child_element_nodes:
