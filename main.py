@@ -44,6 +44,8 @@ for element in tqdm(root_child_elements, desc='Iterating: '):
         (given_name, surname) = element.get_name()
         birth_year = element.get_birth_year()
         death_year = element.get_death_year()
+        (birth_date, birth_place, birth_sources) = element.get_birth_data()
+        (death_date, death_place, death_sources) = element.get_death_data()
         gender = element.get_gender()
         pointer = element.get_pointer()
 
@@ -51,8 +53,12 @@ for element in tqdm(root_child_elements, desc='Iterating: '):
         label = f'{ given_name } { surname }'
         if birth_year != -1:
             label += f'\n* { birth_year }'
+            if birth_place:
+                label += f' ({ birth_place })'
         if death_year != -1:
             label += f'\n+ { death_year }'
+            if death_place:
+                label += f' ({ death_place })'
 
         # Set fill color
         fillcolor = ''
