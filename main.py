@@ -20,7 +20,7 @@ gedcom_parser.parse_file(file_path)
 root_child_elements = gedcom_parser.get_root_child_elements()
 
 # Create the graph
-graph = pydot.Dot(graph_type='graph', rankdir='TB', ranksep='1.0')
+graph = pydot.Dot(graph_type='graph', rankdir='TB', ranksep='1.0', splines='spline')
 
 # Create an empty list to store the root child element nodes
 root_child_element_nodes = set()
