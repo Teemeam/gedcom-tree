@@ -9,6 +9,7 @@ Visualize ancestry data in Python.
 - [pydot](https://pypi.org/project/pydot/)
     - pydot uses [GraphViz](https://graphviz.org/) to render graphs as PDF, PNG, SVG, etc. Install it separately.
 - [tqdm](https://github.com/tqdm/tqdm) for progress meter.
+- [folium](https://github.com/python-visualization/folium) visualizes locations in a Leaflet map.
 
 ## **Usage**
 
@@ -17,6 +18,8 @@ Export a [GEDCOM file](https://en.wikipedia.org/wiki/GEDCOM) from a genealogy so
 Add pointers of selected individuals to the list in `modules/linear_descendants.py` to highlight lineal descendants.
 
 Run `py main.py` to parse the GEDCOM file and to create a graph.
+
+Run `py map.py` to parse the GEDCOM file and to create a location map.
 
 ## **Test**
 
