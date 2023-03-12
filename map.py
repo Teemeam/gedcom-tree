@@ -1,4 +1,5 @@
 import folium
+from folium.plugins import HeatMap
 
 # Create empty lists to store placenames, latitudes, and longitudes
 placenames = []
@@ -51,11 +52,20 @@ if len(placenames) == 0:
     print("No locations found in GEDCOM file.")
 else:
     # Create a map centered on the first location
-    m = folium.Map(location=[float(latitudes[0]), float(longitudes[0])], zoom_start=4)
+    m = folium.Map(location=[float(latitudes[0]), float(longitudes[0])], zoom_start=7)
+
+    # Create a list of coordinate pairs
+    coordinates = list(zip(latitudes, longitudes))
 
     # Add markers for each location to the map
     for name, lat, lon in zip(placenames, latitudes, longitudes):
         folium.Marker([float(lat), float(lon)], popup=name).add_to(m)
+
+    # Create a heatmap layer from the coordinates
+    heat_layer = HeatMap(coordinates)
+
+    # Add the heatmap layer to the map
+    heat_layer.add_to(m)
 
     # Display the map
     m.save("build/map.html")
