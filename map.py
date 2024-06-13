@@ -1,5 +1,5 @@
 import folium
-from folium.plugins import HeatMap
+from folium.plugins import HeatMap, MarkerCluster
 
 # Create empty lists to store placenames, latitudes, and longitudes
 placenames = []
@@ -17,35 +17,77 @@ with open('family_tree.ged', 'r', encoding='utf-8') as f:
     # Loop over each line in the file
     for line in f:
 
-        # Strip any leading or trailing whitespace from the line
+        # Remove any leading or trailing whitespace from the line
         line = line.strip()
         
-        # Check if the line starts with `2 PLAC`
+        # Check if the line starts with the `2 PLAC` tag
         if line.startswith('2 PLAC'):
                 
             # Update the current place
             current_place = line[7:]
-            latitude = None
-            longitude = None
         
-        # Check if the line starts with `4 LATI`
-        elif line.startswith('4 LATI'):
-            latitude = line.split(' ')[-1][1:]
-            
-        # Check if the line starts with `4 LONG`
-        elif line.startswith('4 LONG'):
-            longitude = line.split(' ')[-1][1:]
-    
-        # If we have a current place, latitude, and longitude, add them to the lists
-        if current_place and latitude and longitude:
-            placenames.append(current_place)
-            latitudes.append(latitude)
-            longitudes.append(longitude)
+            # Get the next line and remove any leading or trailing whitespace
+            next_line = next(f).strip()
+                        
+            # If the next line contains the `3 MAP` tag
+            if '3 MAP' in next_line:
 
-            # Reset the variables so we can start looking for the next place
-            current_place = None
-            latitude = None
-            longitude = None
+                # Get the next two lines, which should contain the latitude and longitude
+                lat_line = next(f).strip()
+                long_line = next(f).strip()
+
+                # Extract the latitude and longitude
+                latitude = lat_line.split(' ')[-1][1:]  # Remove the 'N' from the start of the latitude
+                longitude = long_line.split(' ')[-1][1:]  # Remove the 'E' from the start of the longitude
+                            
+                # Add the place name, latitude, and longitude to the lists
+                placenames.append(current_place)
+                latitudes.append(latitude)
+                longitudes.append(longitude)
+
+            # If the next line does not contain the `3 MAP` tag
+            else:
+                # Get the jurisdiction of the place
+                diff_jurisdiction = current_place.partition(',')[2].strip()
+
+                # If the jurisdiction is not empty
+                if diff_jurisdiction:
+
+                    # Open the GEDCOM file again
+                    with open('family_tree.ged', 'r', encoding='utf-8') as q:
+
+                        # Iterate over the lines in the file again
+                        for line in q:
+
+                            # If the line contains the jurisdiction
+                            if '2 PLAC ' + diff_jurisdiction in line:
+
+                                # Get the next line and remove any leading or trailing whitespace
+                                next_line = next(q).strip()
+                                        
+                                # If the next line contains the `3 MAP` tag
+                                if '3 MAP' in next_line:
+
+                                    # Get the next two lines, which should contain the latitude and longitude
+                                    lat_line = next(q).strip()
+                                    long_line = next(q).strip()
+
+                                    # Extract the latitude and longitude
+                                    latitude = lat_line.split(' ')[-1][1:]  # Remove the 'N' from the start of the latitude
+                                    longitude = long_line.split(' ')[-1][1:]  # Remove the 'E' from the start of the longitude
+                                            
+                                    # Add the place name, latitude, and longitude to the lists
+                                    placenames.append(current_place)
+                                    latitudes.append(latitude)
+                                    longitudes.append(longitude)
+                                            
+                                    break
+
+        # Reset the variables so we can start looking for the next place
+        current_place = None
+        latitude = None
+        longitude = None
+
 
 # Check if we found any locations in the GEDCOM file
 if len(placenames) == 0:
@@ -63,15 +105,20 @@ else:
     # Add the heatmap layer to the map
     heat_layer.add_to(m)
 
-    # Create a layer group for the markers
-    marker_group = folium.FeatureGroup(name='Markers', show=False)
+    # Create a marker cluster
+    marker_cluster = MarkerCluster(name='Markers', show=False).add_to(m)
 
-    # Add markers for each location to the map
+    # Create a dictionary to store unique names and their coordinates
+    unique_markers = {}
+
+    # Add markers for each unique location to the map
     for name, lat, lon in zip(placenames, latitudes, longitudes):
-        folium.Marker([float(lat), float(lon)], popup=name).add_to(marker_group)
+        if name not in unique_markers:
+            unique_markers[name] = [float(lat), float(lon)]
 
-    # Add the marker group to the map
-    marker_group.add_to(m)
+    # Add the unique markers to the marker cluster
+    for name, coords in unique_markers.items():
+        folium.Marker(coords, popup=name).add_to(marker_cluster)
 
     # Add a layer control to the map to toggle the markers
     folium.LayerControl(collapsed=False).add_to(m)

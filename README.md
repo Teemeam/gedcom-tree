@@ -19,7 +19,7 @@ Add pointers of selected individuals to the list in `modules/linear_descendants.
 
 Run `py main.py` to parse the GEDCOM file and to create a graph.
 
-Run `py map.py` to parse the GEDCOM file and to create a location map. Note that this script assumes that the GEDCOM file has latitude and longitude information for each place. If a place does not have this information, the script will not plot it on the map.
+Run `py map.py` to parse the GEDCOM file and to create a location map. The script tries to find latitude and longitude information for each place. If a place does not have this information, the script will ascend to a higher jurisdiction level and use the coordinates associated with that jurisdiction.
 
 ## **Test**
 
