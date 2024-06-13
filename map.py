@@ -88,7 +88,6 @@ with open('family_tree.ged', 'r', encoding='utf-8') as f:
         latitude = None
         longitude = None
 
-
 # Check if we found any locations in the GEDCOM file
 if len(placenames) == 0:
     print('No locations found in GEDCOM file.')
