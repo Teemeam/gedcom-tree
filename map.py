@@ -1,6 +1,9 @@
 import folium
 from folium.plugins import HeatMap, MarkerCluster
 
+# Import modules
+from modules.extract_coordinates import extract_coordinates
+
 # Create empty lists to store placenames, latitudes, and longitudes
 placenames = []
 latitudes = []
@@ -32,18 +35,8 @@ with open('family_tree.ged', 'r', encoding='utf-8') as f:
             # If the next line contains the `3 MAP` tag
             if '3 MAP' in next_line:
 
-                # Get the next two lines, which should contain the latitude and longitude
-                lat_line = next(f).strip()
-                long_line = next(f).strip()
-
-                # Extract the latitude and longitude
-                latitude = lat_line.split(' ')[-1][1:]  # Remove the 'N' from the start of the latitude
-                longitude = long_line.split(' ')[-1][1:]  # Remove the 'E' from the start of the longitude
-                            
-                # Add the place name, latitude, and longitude to the lists
-                placenames.append(current_place)
-                latitudes.append(latitude)
-                longitudes.append(longitude)
+                # Extract the coordinates
+                extract_coordinates(f, current_place, placenames, latitudes, longitudes)
 
             # If the next line does not contain the `3 MAP` tag
             else:
@@ -68,19 +61,9 @@ with open('family_tree.ged', 'r', encoding='utf-8') as f:
                                 # If the next line contains the `3 MAP` tag
                                 if '3 MAP' in next_line:
 
-                                    # Get the next two lines, which should contain the latitude and longitude
-                                    lat_line = next(q).strip()
-                                    long_line = next(q).strip()
+                                    # Extract the coordinates
+                                    extract_coordinates(q, diff_jurisdiction, placenames, latitudes, longitudes)
 
-                                    # Extract the latitude and longitude
-                                    latitude = lat_line.split(' ')[-1][1:]  # Remove the 'N' from the start of the latitude
-                                    longitude = long_line.split(' ')[-1][1:]  # Remove the 'E' from the start of the longitude
-                                            
-                                    # Add the place name, latitude, and longitude to the lists
-                                    placenames.append(current_place)
-                                    latitudes.append(latitude)
-                                    longitudes.append(longitude)
-                                            
                                     break
 
         # Reset the variables so we can start looking for the next place
