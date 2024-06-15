@@ -11,65 +11,63 @@ longitudes = []
 
 # Open the GEDCOM file
 with open('family_tree.ged', 'r', encoding='utf-8') as f:
+    lines = f.readlines()
 
-    # Initialize some variables
+# Initialize some variables
+current_place = None
+latitude = None
+longitude = None
+    
+# Loop over each line in the file
+for i, line in enumerate(lines):
+
+    # Remove any leading or trailing whitespace from the line
+    line = line.strip()
+        
+    # Check if the line starts with the `2 PLAC` tag
+    if line.startswith('2 PLAC'):
+                
+        # Update the current place
+        current_place = line[7:]
+        
+        # Get the next line and remove any leading or trailing whitespace
+        next_line = lines[i+1].strip() if i+1 < len(lines) else None
+                        
+        # If the next line contains the `3 MAP` tag
+        if next_line and '3 MAP' in next_line:
+
+            # Extract the coordinates
+            extract_coordinates(lines, i+2, current_place, placenames, latitudes, longitudes)
+
+        # If the next line does not contain the `3 MAP` tag
+        else:
+            # Get the jurisdiction of the place
+            diff_jurisdiction = current_place.partition(',')[2].strip()
+
+            # If the jurisdiction is not empty
+            if diff_jurisdiction:
+
+                # Iterate over the lines in the file again
+                for j, line in enumerate(lines):
+
+                    # If the line contains the jurisdiction
+                    if '2 PLAC ' + diff_jurisdiction in line:
+
+                        # Get the next line and remove any leading or trailing whitespace
+                        next_line = lines[j+1].strip() if j+1 < len(lines) else None
+                                        
+                        # If the next line contains the `3 MAP` tag
+                        if next_line and '3 MAP' in next_line:
+
+                            # Extract the coordinates
+                            extract_coordinates(lines, j+2, current_place, placenames, latitudes, longitudes)
+
+                            break
+
+    # Reset the variables so we can start looking for the next place
     current_place = None
     latitude = None
     longitude = None
-    
-    # Loop over each line in the file
-    for line in f:
-
-        # Remove any leading or trailing whitespace from the line
-        line = line.strip()
-        
-        # Check if the line starts with the `2 PLAC` tag
-        if line.startswith('2 PLAC'):
-                
-            # Update the current place
-            current_place = line[7:]
-        
-            # Get the next line and remove any leading or trailing whitespace
-            next_line = next(f).strip()
-                        
-            # If the next line contains the `3 MAP` tag
-            if '3 MAP' in next_line:
-
-                # Extract the coordinates
-                extract_coordinates(f, current_place, placenames, latitudes, longitudes)
-
-            # If the next line does not contain the `3 MAP` tag
-            else:
-                # Get the jurisdiction of the place
-                diff_jurisdiction = current_place.partition(',')[2].strip()
-
-                # If the jurisdiction is not empty
-                if diff_jurisdiction:
-
-                    # Open the GEDCOM file again
-                    with open('family_tree.ged', 'r', encoding='utf-8') as q:
-
-                        # Iterate over the lines in the file again
-                        for line in q:
-
-                            # If the line contains the jurisdiction
-                            if '2 PLAC ' + diff_jurisdiction in line:
-
-                                # Get the next line and remove any leading or trailing whitespace
-                                next_line = next(q).strip()
-                                        
-                                # If the next line contains the `3 MAP` tag
-                                if '3 MAP' in next_line:
-
-                                    # Extract the coordinates
-                                    extract_coordinates(q, diff_jurisdiction, placenames, latitudes, longitudes)
-
-                                    break
-
-        # Reset the variables so we can start looking for the next place
-        current_place = None
-        latitude = None
-        longitude = None
 
 # Check if we found any locations in the GEDCOM file
 if len(placenames) == 0:
